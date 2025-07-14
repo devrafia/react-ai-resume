@@ -7,7 +7,7 @@ export function Header() {
   return (
     <>
       <div className="flex justify-between p-2">
-        <img src="logo.svg" alt="" />
+        <img src="/logo.svg" alt="logo" />
         {!isSignedIn ? (
           <div>
             <Link to={"/dashboard"}>
