@@ -17,8 +17,8 @@ export default function DetailResume() {
   useEffect(() => {
     GlobalApi.getUserResumeOne(resumeId).then(
       (response) => {
-        console.log(response.data.data[0]);
-        setResumeData(response.data.data[0]);
+        const data = response.data.data[0];
+        setResumeData(data);
       },
       (error) => {
         console.log(error);
@@ -28,8 +28,32 @@ export default function DetailResume() {
 
   const onHandleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name);
-    setResumeData({ ...resumeData, [name]: value });
+
+    // Contoh name: "educations.0.university"
+    const keys = name.split(".");
+
+    setResumeData((prevData) => {
+      const updatedData = { ...prevData };
+
+      // Jika bukan nested (langsung satu level)
+      if (keys.length === 1) {
+        updatedData[name] = value;
+      }
+      // Jika nested (seperti educations.0.university)
+      else {
+        const [arrayKey, index, field] = keys;
+        const targetArray = [...(updatedData[arrayKey] || [])];
+
+        if (!targetArray[index]) {
+          targetArray[index] = {};
+        }
+
+        targetArray[index][field] = value;
+        updatedData[arrayKey] = targetArray;
+      }
+      console.log(resumeData);
+      return updatedData;
+    });
   };
 
   const formSection = [
@@ -42,7 +66,11 @@ export default function DetailResume() {
       resumeData={resumeData}
       onHandleChange={onHandleChange}
     />,
-    <ResumeEducation resumeData={resumeData} onHandleChange={onHandleChange} />,
+    <ResumeEducation
+      resumeData={resumeData}
+      setResumeData={setResumeData}
+      onHandleChange={onHandleChange}
+    />,
   ];
 
   function onHandleNextPrev(type) {
@@ -68,6 +96,8 @@ export default function DetailResume() {
       jobTitle,
       address,
       userName,
+      educations,
+      experiences,
     } = resumeData;
 
     const payload = {
@@ -81,6 +111,8 @@ export default function DetailResume() {
         jobTitle,
         address,
         userName,
+        educations,
+        experiences,
       },
     };
 
@@ -234,14 +266,24 @@ function PreviewResume({ resumeData }) {
       <h1 className="text-center text-red-400 font-bold">Education</h1>
       <hr className="border-2 my-1 mb-2 border-red-400" />
 
-      {data.education.map((edu, idx) => (
+      {(resumeData.educations?.length > 0
+        ? resumeData.educations
+        : [
+            {
+              university: "University Example",
+              degree: "Diploma in Example",
+              startDate: "Aug 2021",
+              endDate: "Dec 2024",
+            },
+          ]
+      ).map((edu, idx) => (
         <div key={idx} className="mb-4">
           <div className="flex flex-row justify-between items-end">
             <div>
-              <h2 className="font-bold">{edu.school}</h2>
+              <h2 className="font-bold">{edu.university}</h2>
               <p className="text-sm">{edu.degree}</p>
             </div>
-            <p className="text-sm">{edu.date}</p>
+            <p className="text-sm">{edu.startDate + " - " + edu.endDate}</p>
           </div>
         </div>
       ))}
@@ -361,14 +403,14 @@ function ResumeExperience({ resumeData, onHandleChange }) {
         label={"Position Title"}
         id={"positionTitle"}
         onChange={onHandleChange}
-        value={resumeData?.positionTitle ?? ""}
+        value={resumeData?.educations?.positionTitle ?? ""}
       />
 
       <FormField
         label={"Location"}
-        id={"companyLocation"}
+        id={"company"}
         onChange={onHandleChange}
-        value={resumeData?.companyLocation ?? ""}
+        value={resumeData?.company ?? ""}
       />
 
       <div className="flex gap-4">
@@ -397,33 +439,71 @@ function ResumeExperience({ resumeData, onHandleChange }) {
   );
 }
 
-export function ResumeEducation({ resumeData, onHandleChange }) {
+export function ResumeEducation({ resumeData, setResumeData, onHandleChange }) {
+  const handleAddEducation = () => {
+    const newEducation = {
+      university: "University Example",
+      degree: "Diploma in Example",
+      startDate: "Aug 2021",
+      endDate: "Sep 2024",
+    };
+
+    setResumeData((prev) => ({
+      ...prev,
+      educations: [...(prev.educations || []), newEducation],
+    }));
+  };
+
+  const handleRemoveEducation = (index) => {
+    const updatedEducations = [...(resumeData.educations || [])];
+    updatedEducations.splice(index, 1);
+
+    setResumeData((prev) => ({
+      ...prev,
+      educations: updatedEducations,
+    }));
+  };
   return (
-    <div className="flex flex-col gap-4">
-      <FormField
-        label={"University"}
-        id={"educationUniversity"}
-        onChange={onHandleChange}
-        value={resumeData?.educationUniversity ?? ""}
-      />
-      <FormField
-        label={"Degree"}
-        id={"educationDegree"}
-        onChange={onHandleChange}
-        value={resumeData?.educationDegree ?? ""}
-      />
-      <FormField
-        label={"Start Date"}
-        id={"educationStart"}
-        onChange={onHandleChange}
-        value={resumeData?.educationStart ?? ""}
-      />
-      <FormField
-        label={"End Date"}
-        id={"educationEnd"}
-        onChange={onHandleChange}
-        value={resumeData?.educationEnd ?? ""}
-      />
+    <div className="flex flex-col gap-6">
+      {(resumeData?.educations || []).map((education, index) => (
+        <div key={index} className="p-4 border rounded-md space-y-4">
+          <FormField
+            label="University / School"
+            id={`educations.${index}.university`}
+            onChange={onHandleChange}
+            value={education.university ?? ""}
+          />
+          <FormField
+            label="Degree"
+            id={`educations.${index}.degree`}
+            onChange={onHandleChange}
+            value={education.degree ?? ""}
+          />
+          <FormField
+            label="Start Date"
+            id={`educations.${index}.startDate`}
+            onChange={onHandleChange}
+            value={education.startDate ?? ""}
+          />
+          <FormField
+            label="End Date"
+            id={`educations.${index}.endDate`}
+            onChange={onHandleChange}
+            value={education.endDate ?? ""}
+          />
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={() => handleRemoveEducation(index)}
+          >
+            Remove
+          </Button>
+        </div>
+      ))}
+
+      <Button type="button" onClick={handleAddEducation}>
+        + Add Education
+      </Button>
     </div>
   );
 }
