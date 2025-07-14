@@ -128,7 +128,7 @@ export default function DetailResume() {
     <>
       <Header />
       <div className="flex flex-row gap-2 mt-10">
-        <div className="w-full p-4 rounded-md shadow-lg">
+        <div className="w-full p-4 rounded-md shadow-lg h-max">
           <div className="flex flex-col">
             <div className="flex justify-between items-end gap-2 mb-4">
               <div>
@@ -147,7 +147,7 @@ export default function DetailResume() {
             </div>
             <div>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                {formSection[formSectionIndex] ?? <p>Form tidak ditemukan</p>}
+                {formSection[formSectionIndex] ?? ""}
                 <Button className="cursor-pointer">Save</Button>
               </form>
             </div>
