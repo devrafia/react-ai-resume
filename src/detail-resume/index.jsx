@@ -29,18 +29,14 @@ export default function DetailResume() {
   const onHandleChange = (e) => {
     const { name, value } = e.target;
 
-    // Contoh name: "educations.0.university"
     const keys = name.split(".");
 
     setResumeData((prevData) => {
       const updatedData = { ...prevData };
 
-      // Jika bukan nested (langsung satu level)
       if (keys.length === 1) {
         updatedData[name] = value;
-      }
-      // Jika nested (seperti educations.0.university)
-      else {
+      } else {
         const [arrayKey, index, field] = keys;
         const targetArray = [...(updatedData[arrayKey] || [])];
 
@@ -51,7 +47,6 @@ export default function DetailResume() {
         targetArray[index][field] = value;
         updatedData[arrayKey] = targetArray;
       }
-      console.log(resumeData);
       return updatedData;
     });
   };
@@ -64,6 +59,7 @@ export default function DetailResume() {
     <ResumeSummary resumeData={resumeData} setResumeData={setResumeData} />,
     <ResumeExperience
       resumeData={resumeData}
+      setResumeData={setResumeData}
       onHandleChange={onHandleChange}
     />,
     <ResumeEducation
@@ -157,7 +153,7 @@ export default function DetailResume() {
             </div>
           </div>
         </div>
-        <div className="w-full p-4 rounded-md shadow-lg">
+        <div className="w-full p-4">
           {resumeData === null ? (
             <div className="flex justify-center items-center py-10">
               <p className="text-gray-500 animate-pulse">Loading resume...</p>
@@ -172,121 +168,95 @@ export default function DetailResume() {
 }
 
 function PreviewResume({ resumeData }) {
-  const data = {
-    name: "John Doe",
-    title: "Full Stack Developer",
-    address: "Jl. Jakarta Raya No. 14, Kota Jakarta Selatan",
-    phone: "0813-9304-6112",
-    email: "akmalrafi1132@gmail.com",
-    summary:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur laborum unde nemo dolorum voluptates blanditiis nesciunt quisquam dolor earum tenetur delectus quo odit ratione voluptatum...",
-    experiences: [
-      {
-        title: "Full Stack Developer",
-        location: "Semarang, Banyumanik",
-        date: "Jan 2021 - Present",
-        description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur pariatur ea odit perspiciatis deserunt...",
-      },
-      {
-        title: "Full Stack Developer",
-        location: "Semarang, Banyumanik",
-        date: "Jan 2021 - Present",
-        description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur pariatur ea odit perspiciatis deserunt...",
-      },
-    ],
-    education: [
-      {
-        school: "Universitas Dian Nuswantoro",
-        degree: "Diploma in Software Engineering",
-        date: "Aug 2021 - Dec 2024",
-      },
-      {
-        school: "Universitas Dian Nuswantoro",
-        degree: "Diploma in Software Engineering",
-        date: "Aug 2021 - Dec 2024",
-      },
-    ],
-  };
-
   return (
-    <div className="container p-4 relative">
-      <div className="bg-red-400 w-full h-4 mb-6 rounded-t-md"></div>
-
-      <div id="header" className="text-center">
-        <h2 className="font-bold text-red-400">
-          {!resumeData.firstName && !resumeData.lastName
-            ? "John"
-            : `${resumeData.firstName || ""} ${
-                resumeData.lastName || ""
-              }`.trim()}
-        </h2>
-        <h4 className="text-sm">
-          {resumeData.jobTitle ?? "Full Stack Developer"}
-        </h4>
-        <h6 className="text-xs">
-          {resumeData.address ??
-            "Jl. Jakarta Raya No. 14, Kota Jakarta Selatan"}
-        </h6>
-      </div>
-
-      <div className="flex justify-between my-1 mt-4">
-        <p className="font-bold text-sm">
-          {resumeData.phone ?? "0813-9304-6112"}
-        </p>
-        <p className="text-sm">
-          {resumeData.resumeEmail ?? "rafiakmal32@gmail.com"}
-        </p>
-      </div>
-
-      <hr className="border-2 my-1 border-red-400" />
-
-      <p className="text-sm tracking-tight">
-        {resumeData.summary ??
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam nam aut accusantium tenetur ut laboriosam harum saepe dolorem labore nemo."}
-      </p>
-
-      <h1 className="text-center text-red-400 font-bold mt-4">
-        Professional Experience
-      </h1>
-      <hr className="border-2 my-1 border-red-400" />
-
-      {data.experiences.map((exp, idx) => (
-        <div key={idx} className="mb-4">
-          <h1 className="font-bold">{exp.title}</h1>
-          <div className="flex justify-between text-sm">
-            <p>{exp.location}</p>
-            <p>{exp.date}</p>
-          </div>
-          <p className="text-sm tracking-tight mt-2">{exp.description}</p>
+    <div className="container relative h-max rounded-md shadow-lg">
+      <div className="bg-red-400 w-full mb-6 rounded-t-md h-4"></div>
+      <div className="p-4">
+        <div id="header" className="text-center">
+          <h2 className="font-bold text-red-400">
+            {!resumeData.firstName && !resumeData.lastName
+              ? "John"
+              : `${resumeData.firstName || ""} ${
+                  resumeData.lastName || ""
+                }`.trim()}
+          </h2>
+          <h4 className="text-sm">
+            {resumeData.jobTitle ?? "Full Stack Developer"}
+          </h4>
+          <h6 className="text-xs">
+            {resumeData.address ??
+              "Jl. Jakarta Raya No. 14, Kota Jakarta Selatan"}
+          </h6>
         </div>
-      ))}
 
-      <h1 className="text-center text-red-400 font-bold">Education</h1>
-      <hr className="border-2 my-1 mb-2 border-red-400" />
+        <div className="flex justify-between my-1 mt-4">
+          <p className="font-bold text-sm">
+            {resumeData.phone ?? "0813-9304-6112"}
+          </p>
+          <p className="text-sm">
+            {resumeData.resumeEmail ?? "rafiakmal32@gmail.com"}
+          </p>
+        </div>
 
-      {(resumeData.educations?.length > 0
-        ? resumeData.educations
-        : [
-            {
-              university: "University Example",
-              degree: "Diploma in Example",
-              startDate: "Aug 2021",
-              endDate: "Dec 2024",
-            },
-          ]
-      ).map((edu, idx) => (
-        <div key={idx} className="mb-4">
-          <div className="flex flex-row justify-between items-end">
-            <div>
-              <h2 className="font-bold">{edu.university}</h2>
-              <p className="text-sm">{edu.degree}</p>
+        <hr className="border-2 my-1 border-red-400" />
+
+        <p className="text-sm tracking-tight">
+          {resumeData.summary ??
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam nam aut accusantium tenetur ut laboriosam harum saepe dolorem labore nemo."}
+        </p>
+
+        <h1 className="text-center text-red-400 font-bold mt-4">
+          Professional Experience
+        </h1>
+        <hr className="border-2 my-1 border-red-400" />
+
+        {(resumeData.experiences?.length > 0
+          ? resumeData.experiences
+          : [
+              {
+                position: "Company Example",
+                company: "Full Stack Developer",
+                startDate: "Aug 2021",
+                endDate: "Dec 2024",
+                description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex, facere illo id animi, fugiat quam exercitationem necessitatibus voluptatibus deserunt maiores, ad quasi quo ratione eius enim repudiandae dolore natus amet reiciendis quod sit? Rem natus, itaque cumque quod, laudantium excepturi quasi laboriosam iusto nostrum corporis sint? Velit maiores unde et!`,
+              },
+            ]
+        ).map((exp, idx) => (
+          <div key={idx} className="mb-4">
+            <h1 className="font-bold">{exp.position}</h1>
+            <div className="flex justify-between text-sm">
+              <p>{exp.company}</p>
+              <p>{exp.startDate + " - " + exp.endDate}</p>
             </div>
-            <p className="text-sm">{edu.startDate + " - " + edu.endDate}</p>
+            <p className="text-sm tracking-tight mt-2">{exp.description}</p>
           </div>
-        </div>
-      ))}
+        ))}
+
+        <h1 className="text-center text-red-400 font-bold">Education</h1>
+        <hr className="border-2 my-1 mb-2 border-red-400" />
+
+        {(resumeData.educations?.length > 0
+          ? resumeData.educations
+          : [
+              {
+                university: "University Example",
+                degree: "Diploma in Example",
+                startDate: "Aug 2021",
+                endDate: "Dec 2024",
+              },
+            ]
+        ).map((edu, idx) => (
+          <div key={idx} className="mb-4">
+            <div className="flex flex-row justify-between items-end">
+              <div>
+                <h2 className="font-bold">{edu.university}</h2>
+                <p className="text-sm">{edu.degree}</p>
+              </div>
+              <p className="text-sm">{edu.startDate + " - " + edu.endDate}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -396,45 +366,88 @@ function ResumeSummary({ resumeData, setResumeData }) {
   );
 }
 
-function ResumeExperience({ resumeData, onHandleChange }) {
+function ResumeExperience({ resumeData, setResumeData, onHandleChange }) {
+  const handleAddExperience = () => {
+    const newExperience = {
+      position: "Company Example",
+      company: "Full Stack Developer",
+      startDate: "Aug 2021",
+      endDate: "Dec 2024",
+      description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex, facere illo id animi, fugiat quam exercitationem necessitatibus voluptatibus deserunt maiores, ad quasi quo ratione eius enim repudiandae dolore natus amet reiciendis quod sit? Rem natus, itaque cumque quod, laudantium excepturi quasi laboriosam iusto nostrum corporis sint? Velit maiores unde et!`,
+    };
+
+    setResumeData((prev) => ({
+      ...prev,
+      experiences: [...(prev.experiences || []), newExperience],
+    }));
+  };
+
+  const handleRemoveExperience = (index) => {
+    const updatedExperiences = [...(resumeData.experiences || [])];
+    updatedExperiences.splice(index, 1);
+
+    setResumeData((prev) => ({
+      ...prev,
+      experiences: updatedExperiences,
+    }));
+  };
   return (
     <>
-      <FormField
-        label={"Position Title"}
-        id={"positionTitle"}
-        onChange={onHandleChange}
-        value={resumeData?.educations?.positionTitle ?? ""}
-      />
+      <div>
+        {(resumeData.experiences?.length > 0 ? resumeData.experiences : []).map(
+          (experience, index) => (
+            <div key={index}>
+              <FormField
+                label={"Position Title"}
+                id={`experiences.${index}.position`}
+                onChange={onHandleChange}
+                value={experience.position}
+              />
 
-      <FormField
-        label={"Location"}
-        id={"company"}
-        onChange={onHandleChange}
-        value={resumeData?.company ?? ""}
-      />
+              <FormField
+                label={"Location"}
+                id={`experiences.${index}.company`}
+                onChange={onHandleChange}
+                value={experience.company}
+              />
 
-      <div className="flex gap-4">
-        <FormField
-          label={"Start Date"}
-          id={"startDate"}
-          onChange={onHandleChange}
-          value={resumeData?.startDate ?? ""}
-        />
-        <FormField
-          label={"End Date"}
-          id={"endDate"}
-          onChange={onHandleChange}
-          value={resumeData?.endDate ?? ""}
-        />
+              <div className="flex gap-4">
+                <FormField
+                  label={"Start Date"}
+                  id={`experiences.${index}.startDate`}
+                  onChange={onHandleChange}
+                  value={experience.startDate}
+                />
+                <FormField
+                  label={"End Date"}
+                  id={`experiences.${index}.endDate`}
+                  onChange={onHandleChange}
+                  value={experience.endDate}
+                />
+              </div>
+
+              <FormField
+                label={"Description"}
+                id={`experiences.${index}.description`}
+                onChange={onHandleChange}
+                value={experience.description}
+                type="textarea"
+              />
+              <Button
+                type="button"
+                variant="destructive"
+                className="mt-2"
+                onClick={() => handleRemoveExperience(index)}
+              >
+                Remove
+              </Button>
+            </div>
+          )
+        )}
       </div>
-
-      <FormField
-        label={"Description"}
-        id={"description"}
-        onChange={onHandleChange}
-        value={resumeData?.description ?? ""}
-        type="textarea"
-      />
+      <Button type="button" onClick={handleAddExperience}>
+        + Add Experience
+      </Button>
     </>
   );
 }
