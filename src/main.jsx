@@ -8,6 +8,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { Home } from "./Home/index.jsx";
 import { Dashboard } from "./dashboard/index..jsx";
 import DetailResume from "./detail-resume/index.jsx";
+import MyResume from "./my-resume/index.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const root = document.getElementById("root");
@@ -30,6 +31,7 @@ ReactDOM.createRoot(root).render(
           path="/dashboard/resume/:resumeId/edit"
           element={<DetailResume />}
         />
+        <Route path="/my-resume/:resumeId/view" element={<MyResume />} />
       </Routes>
     </ClerkProvider>
   </BrowserRouter>
