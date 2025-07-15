@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
-export default function ConfirmDialog({ title, action, children }) {
+export default function ConfirmDialog({ loading, title, action, children }) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -30,21 +31,13 @@ export default function ConfirmDialog({ title, action, children }) {
             </Button>
           </DialogClose>
 
-          <Button type="button" variant="default" onClick={action}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m4.5 12.75 6 6 9-13.5"
-              />
-            </svg>
+          <Button
+            className="cursor-pointer"
+            type="button"
+            variant="default"
+            onClick={action}
+          >
+            {loading ? <Loader2 className="animate-spin" /> : title}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -17,11 +17,13 @@ import GlobalApi from "../../../services/GlobalApi";
 import { useUser } from "@clerk/clerk-react";
 import { Loader2 } from "lucide-react";
 import ResumeCard from "./ResumeCard";
+import { useNavigate } from "react-router";
 
 export function AddResume({ children }) {
   const [resumeTitle, setResumeTitle] = useState();
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onCreate = (e) => {
     setLoading(true);
@@ -38,9 +40,10 @@ export function AddResume({ children }) {
     };
     GlobalApi.createNewResume(data).then(
       (response) => {
-        console.log(response);
+        const resumeId = response.data.data.resumeId;
         if (response) {
           setLoading(false);
+          navigate("/dashboard/resume/" + resumeId + "/edit");
         }
       },
       (error) => {
