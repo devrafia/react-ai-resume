@@ -112,7 +112,7 @@ export function AddResume({ children }) {
               </form>
             </DialogContent>
           </Dialog>
-          <div className="max-h-[65vh] overflow-y-scroll p-3">
+          <div className="max-h-[65vh] overflow-y-scroll px-3">
             <div className="grid grid-cols-3 gap-6">{children}</div>
           </div>
         </div>

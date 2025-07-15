@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { Link, Navigate, useNavigate, useParams } from "react-router";
 import { Header } from "../components/ui/custom/Header";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -13,21 +13,28 @@ import ResumePersonalDetail from "./components/ResumePersonalDetail";
 import ResumeSummary from "./components/ResumeSummary";
 import ResumeExperience from "./components/ResumeExperience";
 import ResumeEducation from "./components/ResumeEducation";
+import LoadingScreen from "../components/ui/custom/LoadingScreen";
+import ConfirmDialog from "../components/ui/custom/ConfirmDialog";
 
 export default function DetailResume() {
   const { resumeId } = useParams();
-  const [resumeData, setResumeData] = useState(null);
+  const [resumeData, setResumeData] = useState({});
   const [formSectionIndex, setFormSectionIndex] = useState(0);
   const [loading, setLoading] = useState(null);
+  const [loadingScreen, setLoadingScreen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    setLoadingScreen(true);
     GlobalApi.getUserResumeOne(resumeId).then(
       (response) => {
         const data = response.data.data[0];
         setResumeData(data);
+        setLoadingScreen(false);
       },
       (error) => {
         console.log(error);
+        setLoadingScreen(false);
       }
     );
   }, []);
@@ -55,6 +62,18 @@ export default function DetailResume() {
       }
       return updatedData;
     });
+  };
+
+  const onHandleDeleteResume = () => {
+    GlobalApi.deleteResume(resumeData.documentId).then(
+      (response) => {
+        console.log(response);
+        navigate("/dashboard");
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   };
 
   const formSection = [
@@ -169,6 +188,31 @@ export default function DetailResume() {
         <div className="w-full">
           <div className="flex justify-end items-end gap-2">
             <div className="flex gap-2">
+              <ConfirmDialog
+                title="Delete"
+                action={() => onHandleDeleteResume()}
+              >
+                <Button
+                  variant="destructive"
+                  className="ml-auto mb-2 cursor-pointer flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                  Delete
+                </Button>
+              </ConfirmDialog>
               <Link to={`/my-resume/${resumeId}/view`}>
                 <Button className="ml-auto mb-2 cursor-pointer flex items-center">
                   <svg
@@ -191,10 +235,16 @@ export default function DetailResume() {
               <Button
                 onClick={() => onHandleNextPrev("prev")}
                 variant={"secondary"}
+                className="cursor-pointer"
               >
                 Prev
               </Button>
-              <Button onClick={() => onHandleNextPrev("next")}>Next</Button>
+              <Button
+                className="cursor-pointer"
+                onClick={() => onHandleNextPrev("next")}
+              >
+                Next
+              </Button>
             </div>
           </div>
           <div className="w-full rounded-md shadow-lg h-max">
@@ -230,10 +280,8 @@ export default function DetailResume() {
           </div>
         </div>
         <div className="w-full">
-          {resumeData === null ? (
-            <div className="flex justify-center items-center py-10">
-              <p className="text-gray-500 animate-pulse">Loading resume...</p>
-            </div>
+          {loadingScreen ? (
+            <LoadingScreen />
           ) : (
             <>
               <PreviewResume resumeData={resumeData} />

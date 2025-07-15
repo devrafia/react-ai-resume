@@ -6,23 +6,28 @@ import GlobalApi from "../../services/GlobalApi";
 import { useEffect, useState } from "react";
 import ResumeCard from "./components/ResumeCard";
 import { GoogleGenAI } from "@google/genai";
+import LoadingScreen from "../components/ui/custom/LoadingScreen";
 
 export function Dashboard() {
   const { user, isLoaded, isSignedIn } = useUser();
   const [resumes, setResumes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getUserResumes();
   }, [user]);
 
   const getUserResumes = () => {
+    setLoading(true);
     GlobalApi.getUserResumes(user?.primaryEmailAddress?.emailAddress).then(
       (response) => {
         setResumes(response.data.data);
-        console.log(resumes);
+        console.log(response);
+        setLoading(false);
       },
       (error) => {
         console.log(error);
+        setLoading(false);
       }
     );
   };
@@ -35,8 +40,8 @@ export function Dashboard() {
       <div>
         <Header />
         <AddResume>
-          {resumes.length < 1 ? (
-            <h1>Loading....</h1>
+          {loading && !isLoaded ? (
+            <LoadingScreen />
           ) : (
             resumes.map((resume) => (
               <ResumeCard key={resume.id} resume={resume} />
