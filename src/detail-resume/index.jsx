@@ -166,51 +166,11 @@ export default function DetailResume() {
     <>
       <Header />
       <div className="flex flex-row gap-2 mt-10">
-        <div className="w-full p-4 rounded-md shadow-lg h-max">
-          <div className="flex flex-col">
-            <div className="flex justify-between items-end gap-2 mb-4">
-              <div>
-                <h2 className="font-bold">
-                  {formSection[formSectionIndex].title}
-                </h2>
-                <h4>{formSection[formSectionIndex].desc}</h4>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => onHandleNextPrev("prev")}
-                  variant={"secondary"}
-                >
-                  Prev
-                </Button>
-                <Button onClick={() => onHandleNextPrev("next")}>Next</Button>
-              </div>
-            </div>
-            <div>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                {formSection[formSectionIndex].element ?? ""}
-                <Button className="cursor-pointer" disabled={loading}>
-                  {loading === "save" ? (
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="animate-spin" />
-                      Saving
-                    </div>
-                  ) : (
-                    "Save"
-                  )}
-                </Button>
-              </form>
-            </div>
-          </div>
-        </div>
         <div className="w-full">
-          {resumeData === null ? (
-            <div className="flex justify-center items-center py-10">
-              <p className="text-gray-500 animate-pulse">Loading resume...</p>
-            </div>
-          ) : (
-            <>
+          <div className="flex justify-end items-end gap-2">
+            <div className="flex gap-2">
               <Link to={`/my-resume/${resumeId}/view`}>
-                <Button className="ml-auto mb-2 block cursor-pointer">
+                <Button className="ml-auto mb-2 cursor-pointer flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -225,8 +185,57 @@ export default function DetailResume() {
                       d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
                     />
                   </svg>
+                  Download Resume
                 </Button>
               </Link>
+              <Button
+                onClick={() => onHandleNextPrev("prev")}
+                variant={"secondary"}
+              >
+                Prev
+              </Button>
+              <Button onClick={() => onHandleNextPrev("next")}>Next</Button>
+            </div>
+          </div>
+          <div className="w-full rounded-md shadow-lg h-max">
+            <div
+              id="print-area"
+              className="bg-slate-600 w-full rounded-t-md h-4"
+            ></div>
+            <div>
+              <div className="flex flex-col p-4">
+                <div className=" my-4">
+                  <h2 className="font-bold">
+                    {formSection[formSectionIndex].title}
+                  </h2>
+                  <h4>{formSection[formSectionIndex].desc}</h4>
+                </div>
+                <div>
+                  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    {formSection[formSectionIndex].element ?? ""}
+                    <Button className="cursor-pointer" disabled={loading}>
+                      {loading === "save" ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="animate-spin" />
+                          Saving
+                        </div>
+                      ) : (
+                        "Save"
+                      )}
+                    </Button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full">
+          {resumeData === null ? (
+            <div className="flex justify-center items-center py-10">
+              <p className="text-gray-500 animate-pulse">Loading resume...</p>
+            </div>
+          ) : (
+            <>
               <PreviewResume resumeData={resumeData} />
             </>
           )}
