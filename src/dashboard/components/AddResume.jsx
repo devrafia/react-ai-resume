@@ -52,7 +52,7 @@ export function AddResume({ children }) {
 
   return (
     <>
-      <div className="container p-10 flex flex-col gap-1">
+      <div className="container py-10 flex flex-col gap-1">
         <h2 className="text-2xl font-bold">My Resume</h2>
         <h6 className="mb-6">Start creating AI resume to your next Job role</h6>
         <div className="flex gap-36">
@@ -112,7 +112,9 @@ export function AddResume({ children }) {
               </form>
             </DialogContent>
           </Dialog>
-          <div className="grid grid-cols-3 gap-6">{children}</div>
+          <div className="max-h-[65vh] overflow-y-scroll p-3">
+            <div className="grid grid-cols-3 gap-6">{children}</div>
+          </div>
         </div>
       </div>
     </>

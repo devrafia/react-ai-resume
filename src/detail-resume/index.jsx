@@ -5,15 +5,20 @@ import { Input } from "../components/ui/input";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { GoogleGenAI } from "@google/genai";
-import { Loader } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import GlobalApi from "../../services/GlobalApi";
 import FormField from "./components/FormField";
 import PreviewResume from "./components/PreviewResume";
+import ResumePersonalDetail from "./components/ResumePersonalDetail";
+import ResumeSummary from "./components/ResumeSummary";
+import ResumeExperience from "./components/ResumeExperience";
+import ResumeEducation from "./components/ResumeEducation";
 
 export default function DetailResume() {
   const { resumeId } = useParams();
   const [resumeData, setResumeData] = useState(null);
   const [formSectionIndex, setFormSectionIndex] = useState(0);
+  const [loading, setLoading] = useState(null);
 
   useEffect(() => {
     GlobalApi.getUserResumeOne(resumeId).then(
@@ -53,21 +58,50 @@ export default function DetailResume() {
   };
 
   const formSection = [
-    <ResumePersonalDetail
-      resumeData={resumeData}
-      onHandleChange={onHandleChange}
-    />,
-    <ResumeSummary resumeData={resumeData} setResumeData={setResumeData} />,
-    <ResumeExperience
-      resumeData={resumeData}
-      setResumeData={setResumeData}
-      onHandleChange={onHandleChange}
-    />,
-    <ResumeEducation
-      resumeData={resumeData}
-      setResumeData={setResumeData}
-      onHandleChange={onHandleChange}
-    />,
+    {
+      title: "Personal Detail",
+      desc: "Get started with the basic information",
+      element: (
+        <ResumePersonalDetail
+          resumeData={resumeData}
+          onHandleChange={onHandleChange}
+        />
+      ),
+    },
+    {
+      title: "Professional Summary",
+      desc: "Write a brief summary to highlight your skills and goals",
+      element: (
+        <ResumeSummary
+          loading={loading}
+          setLoading={setLoading}
+          resumeData={resumeData}
+          setResumeData={setResumeData}
+        />
+      ),
+    },
+    {
+      title: "Work Experience",
+      desc: "List your past jobs, roles, and key accomplishments",
+      element: (
+        <ResumeExperience
+          resumeData={resumeData}
+          setResumeData={setResumeData}
+          onHandleChange={onHandleChange}
+        />
+      ),
+    },
+    {
+      title: "Education",
+      desc: "Add your academic background and qualifications",
+      element: (
+        <ResumeEducation
+          resumeData={resumeData}
+          setResumeData={setResumeData}
+          onHandleChange={onHandleChange}
+        />
+      ),
+    },
   ];
 
   function onHandleNextPrev(type) {
@@ -82,6 +116,7 @@ export default function DetailResume() {
   }
 
   const handleSubmit = (e) => {
+    setLoading("save");
     e.preventDefault();
     const {
       firstName,
@@ -118,9 +153,11 @@ export default function DetailResume() {
     GlobalApi.updateResume(resumeData.documentId, payload).then(
       (response) => {
         console.log(response);
+        setLoading(null);
       },
       (error) => {
         console.log(error);
+        setLoading(null);
       }
     );
   };
@@ -133,8 +170,10 @@ export default function DetailResume() {
           <div className="flex flex-col">
             <div className="flex justify-between items-end gap-2 mb-4">
               <div>
-                <h2 className="font-bold">Personal Detail</h2>
-                <h4>Get started with the basic information</h4>
+                <h2 className="font-bold">
+                  {formSection[formSectionIndex].title}
+                </h2>
+                <h4>{formSection[formSectionIndex].desc}</h4>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -148,8 +187,17 @@ export default function DetailResume() {
             </div>
             <div>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                {formSection[formSectionIndex] ?? ""}
-                <Button className="cursor-pointer">Save</Button>
+                {formSection[formSectionIndex].element ?? ""}
+                <Button className="cursor-pointer" disabled={loading}>
+                  {loading === "save" ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="animate-spin" />
+                      Saving
+                    </div>
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
               </form>
             </div>
           </div>
@@ -185,265 +233,5 @@ export default function DetailResume() {
         </div>
       </div>
     </>
-  );
-}
-
-function ResumePersonalDetail({ resumeData, onHandleChange }) {
-  return (
-    <>
-      <div className="flex flex-row gap-2">
-        <FormField
-          label={"First Name"}
-          id={"firstName"}
-          onChange={onHandleChange}
-          value={resumeData?.firstName ?? ""}
-        />
-        <FormField
-          label={"Last Name"}
-          id={"lastName"}
-          onChange={onHandleChange}
-          value={resumeData?.lastName ?? ""}
-        />
-      </div>
-      <FormField
-        label={"Job Title"}
-        id={"jobTitle"}
-        onChange={onHandleChange}
-        value={resumeData?.jobTitle ?? ""}
-      />
-      <FormField
-        label={"Address"}
-        id={"address"}
-        onChange={onHandleChange}
-        value={resumeData?.address ?? ""}
-      />
-      <div className="flex flex-row gap-2">
-        <FormField
-          label={"Phone"}
-          id={"phone"}
-          onChange={onHandleChange}
-          value={resumeData?.phone ?? ""}
-        />
-        <FormField
-          label={"Email"}
-          id={"resumeEmail"}
-          onChange={onHandleChange}
-          value={resumeData?.resumeEmail ?? ""}
-        />
-      </div>
-    </>
-  );
-}
-
-function ResumeSummary({ resumeData, setResumeData }) {
-  const [loading, setLoading] = useState(false);
-
-  const prompt = `Generate a professional and concise summary for a resume based on the following details:
-                  - Full Name: John Doe
-                  - Job Title: Full Stack Developer
-                  - Skills: JavaScript, React, Node.js, MongoDB
-                  - Location: Semarang, Indonesia
-                  - Email: johndoe@example.com
-                  - Phone: 0813-1234-5678
-                  - Experience: 3 years of experience in building scalable web applications and RESTful APIs.
-                  - Education: Diploma in Software Engineering from Universitas Dian Nuswantoro
-
-                  The summary should be written in a formal tone, no longer than 4 sentences, and highlight the candidate's strengths and experience.`;
-
-  const ai = new GoogleGenAI({
-    apiKey: import.meta.env.VITE_GEMINI_API_KEY,
-  });
-
-  const handleGenerate = async (e) => {
-    setLoading(true);
-    e.preventDefault();
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-
-    setResumeData({ ...resumeData, summary: response.text });
-    setLoading(false);
-  };
-
-  const handleChange = (e) => {
-    setResumeData({ ...resumeData, summary: e.target.value });
-  };
-
-  return (
-    <div className="flex flex-col gap-4">
-      <Button className="w-fit" disabled={loading} onClick={handleGenerate}>
-        {loading ? (
-          <div className="flex gap-2 items-center">
-            <Loader className="animate-spin" />
-            Generating...
-          </div>
-        ) : (
-          "Generate AI Summary"
-        )}
-      </Button>
-      <Textarea
-        type="text"
-        placeholder="Summary"
-        value={resumeData.summary || ""}
-        onChange={handleChange}
-      />
-    </div>
-  );
-}
-
-function ResumeExperience({ resumeData, setResumeData, onHandleChange }) {
-  const handleAddExperience = () => {
-    const newExperience = {
-      position: "Company Example",
-      company: "Full Stack Developer",
-      startDate: "Aug 2021",
-      endDate: "Dec 2024",
-      description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex, facere illo id animi, fugiat quam exercitationem necessitatibus voluptatibus deserunt maiores, ad quasi quo ratione eius enim repudiandae dolore natus amet reiciendis quod sit? Rem natus, itaque cumque quod, laudantium excepturi quasi laboriosam iusto nostrum corporis sint? Velit maiores unde et!`,
-    };
-
-    setResumeData((prev) => ({
-      ...prev,
-      experiences: [...(prev.experiences || []), newExperience],
-    }));
-  };
-
-  const handleRemoveExperience = (index) => {
-    const updatedExperiences = [...(resumeData.experiences || [])];
-    updatedExperiences.splice(index, 1);
-
-    setResumeData((prev) => ({
-      ...prev,
-      experiences: updatedExperiences,
-    }));
-  };
-  return (
-    <>
-      <div>
-        {(resumeData.experiences?.length > 0 ? resumeData.experiences : []).map(
-          (experience, index) => (
-            <div key={index}>
-              <FormField
-                label={"Position Title"}
-                id={`experiences.${index}.position`}
-                onChange={onHandleChange}
-                value={experience.position}
-              />
-
-              <FormField
-                label={"Location"}
-                id={`experiences.${index}.company`}
-                onChange={onHandleChange}
-                value={experience.company}
-              />
-
-              <div className="flex gap-4">
-                <FormField
-                  label={"Start Date"}
-                  id={`experiences.${index}.startDate`}
-                  onChange={onHandleChange}
-                  value={experience.startDate}
-                />
-                <FormField
-                  label={"End Date"}
-                  id={`experiences.${index}.endDate`}
-                  onChange={onHandleChange}
-                  value={experience.endDate}
-                />
-              </div>
-
-              <FormField
-                label={"Description"}
-                id={`experiences.${index}.description`}
-                onChange={onHandleChange}
-                value={experience.description}
-                type="textarea"
-              />
-              <Button
-                type="button"
-                variant="destructive"
-                className="mt-2"
-                onClick={() => handleRemoveExperience(index)}
-              >
-                Remove
-              </Button>
-            </div>
-          )
-        )}
-      </div>
-      <Button type="button" onClick={handleAddExperience}>
-        + Add Experience
-      </Button>
-    </>
-  );
-}
-
-export function ResumeEducation({ resumeData, setResumeData, onHandleChange }) {
-  const handleAddEducation = () => {
-    const newEducation = {
-      university: "University Example",
-      degree: "Diploma in Example",
-      startDate: "Aug 2021",
-      endDate: "Sep 2024",
-    };
-
-    setResumeData((prev) => ({
-      ...prev,
-      educations: [...(prev.educations || []), newEducation],
-    }));
-  };
-
-  const handleRemoveEducation = (index) => {
-    const updatedEducations = [...(resumeData.educations || [])];
-    updatedEducations.splice(index, 1);
-
-    setResumeData((prev) => ({
-      ...prev,
-      educations: updatedEducations,
-    }));
-  };
-  return (
-    <div className="flex flex-col gap-6">
-      {(resumeData?.educations || []).map((education, index) => (
-        <div key={index} className="p-4 border rounded-md space-y-4">
-          <FormField
-            label="University / School"
-            id={`educations.${index}.university`}
-            onChange={onHandleChange}
-            value={education.university ?? ""}
-          />
-          <FormField
-            label="Degree"
-            id={`educations.${index}.degree`}
-            onChange={onHandleChange}
-            value={education.degree ?? ""}
-          />
-          <FormField
-            label="Start Date"
-            id={`educations.${index}.startDate`}
-            onChange={onHandleChange}
-            value={education.startDate ?? ""}
-          />
-          <FormField
-            label="End Date"
-            id={`educations.${index}.endDate`}
-            onChange={onHandleChange}
-            value={education.endDate ?? ""}
-          />
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={() => handleRemoveEducation(index)}
-          >
-            Remove
-          </Button>
-        </div>
-      ))}
-
-      <Button type="button" onClick={handleAddEducation}>
-        + Add Education
-      </Button>
-    </div>
   );
 }

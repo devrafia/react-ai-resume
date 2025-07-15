@@ -27,6 +27,7 @@ ReactDOM.createRoot(root).render(
         <Route index element={<Home />} />
         <Route path="/auth/sign-in" element={<SignInPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/home" element={<Home />} />
         <Route
           path="/dashboard/resume/:resumeId/edit"
           element={<DetailResume />}

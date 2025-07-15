@@ -1,13 +1,13 @@
 export default function PreviewResume({ resumeData }) {
   return (
-    <div className="relative p-0 h-max rounded-md">
+    <div className="relative p-0 h-max rounded-md shadow-md print:shadow-none">
       <div
         id="print-area"
-        className="bg-red-400 w-full mb-6 rounded-t-md h-4"
+        className="bg-slate-600 w-full mb-6 rounded-t-md h-4"
       ></div>
       <div className="p-4">
         <div id="header" className="text-center">
-          <h2 className="font-bold text-red-400">
+          <h2 className="font-bold text-slate-600">
             {!resumeData.firstName && !resumeData.lastName
               ? "John"
               : `${resumeData.firstName || ""} ${
@@ -32,17 +32,17 @@ export default function PreviewResume({ resumeData }) {
           </p>
         </div>
 
-        <hr className="border-2 my-1 border-red-400" />
+        <hr className="border-2 my-1 border-slate-600" />
 
-        <p className="text-sm tracking-tight">
+        <p className="text-sm text-justify tracking-tight">
           {resumeData.summary ??
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam nam aut accusantium tenetur ut laboriosam harum saepe dolorem labore nemo."}
         </p>
 
-        <h1 className="text-center text-red-400 font-bold mt-4">
+        <h1 className="text-center text-slate-600 font-bold mt-4">
           Professional Experience
         </h1>
-        <hr className="border-2 my-1 border-red-400" />
+        <hr className="border-2 my-1 border-slate-600" />
 
         {(resumeData.experiences?.length > 0
           ? resumeData.experiences
@@ -62,12 +62,14 @@ export default function PreviewResume({ resumeData }) {
               <p>{exp.company}</p>
               <p>{exp.startDate + " - " + exp.endDate}</p>
             </div>
-            <p className="text-sm tracking-tight mt-2">{exp.description}</p>
+            <p className="text-sm text-justify tracking-tight mt-2">
+              {exp.description}
+            </p>
           </div>
         ))}
 
-        <h1 className="text-center text-red-400 font-bold">Education</h1>
-        <hr className="border-2 my-1 mb-2 border-red-400" />
+        <h1 className="text-center text-slate-600 font-bold">Education</h1>
+        <hr className="border-2 my-1 mb-2 border-slate-600" />
 
         {(resumeData.educations?.length > 0
           ? resumeData.educations
