@@ -10,7 +10,7 @@ function SignInPage() {
   return (
     <div>
       <header className="h-[100vh] flex items-center justify-center">
-        <SignIn />
+        <SignIn afterSignInUrl={"/dashboard"} afterSignUpUrl={"/dashboard"} />
       </header>
     </div>
   );
