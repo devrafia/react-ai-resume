@@ -187,7 +187,7 @@ export default function DetailResume() {
   return (
     <>
       <Header />
-      <div className="flex flex-row gap-2 pt-10 px-16 min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100  justify-between">
+      <div className="flex flex-row gap-2 pt-10 px-16 min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 justify-between">
         <div className="w-full">
           <div className="flex justify-end items-end gap-2">
             <div className="flex gap-2 mb-2">

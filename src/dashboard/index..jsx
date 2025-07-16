@@ -41,7 +41,7 @@ export function Dashboard() {
         <Header />
         <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex justify-between px-16">
           <AddResume>
-            {loading && !isLoaded ? (
+            {loading ? (
               <LoadingScreen />
             ) : (
               resumes.map((resume) => (
