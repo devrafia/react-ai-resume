@@ -39,15 +39,17 @@ export function Dashboard() {
     <>
       <div>
         <Header />
-        <AddResume>
-          {loading && !isLoaded ? (
-            <LoadingScreen />
-          ) : (
-            resumes.map((resume) => (
-              <ResumeCard key={resume.id} resume={resume} />
-            ))
-          )}
-        </AddResume>
+        <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex justify-between px-16">
+          <AddResume>
+            {loading && !isLoaded ? (
+              <LoadingScreen />
+            ) : (
+              resumes.map((resume) => (
+                <ResumeCard key={resume.id} resume={resume} />
+              ))
+            )}
+          </AddResume>
+        </div>
       </div>
     </>
   );

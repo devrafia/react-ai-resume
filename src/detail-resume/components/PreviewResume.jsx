@@ -1,6 +1,8 @@
-export default function PreviewResume({ resumeData }) {
+export default function PreviewResume({ resumeData, className = "" }) {
   return (
-    <div className="relative p-0 h-max rounded-md shadow-md print:shadow-none">
+    <div
+      className={`relative p-0 h-max bg-white aspect-[210/350] rounded-md shadow-md print:shadow-none ${className}`}
+    >
       <div
         id="print-area"
         className="bg-slate-600 w-full mb-6 rounded-t-md h-4"

@@ -6,8 +6,10 @@ export function Header() {
   const { user, isSignedIn } = useUser();
   return (
     <>
-      <div className="flex justify-between p-2">
-        <img src="/logo.svg" alt="logo" />
+      <div className="flex justify-between p-4 px-16 shadow-md bg-slate-50 relative z-20">
+        <Link to={"/"}>
+          <img src="/logo.svg" alt="logo" />
+        </Link>
         {!isSignedIn ? (
           <div>
             <Link to={"/dashboard"}>

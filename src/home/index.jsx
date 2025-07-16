@@ -1,36 +1,138 @@
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { Navigate } from "react-router";
 import { Header } from "../components/ui/custom/Header";
+import { FileText } from "lucide-react";
 
 export function Home() {
   const { user, isLoaded, isSignedIn } = useUser();
 
   return (
     <>
-      <section className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-20 px-6 flex flex-col items-center justify-center text-center">
-        <div className="max-w-3xl">
-          <h1 className="text-5xl font-extrabold text-gray-800 leading-tight mb-4">
-            Welcome{user?.firstName ? `, ${user.firstName}` : ""}!
-          </h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Create stunning resumes effortlessly with our AI-powered Resume
-            Builder.
-          </p>
-          <div className="flex justify-center gap-4 flex-wrap">
+      <Header />
+      <section className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex items-center justify-between px-16">
+        <div className="w-full flex flex-col md:flex-row items-center gap-20">
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start mb-4">
+              <FileText className="w-12 h-12 text-blue-600" />
+              <span className="ml-3 text-xl font-semibold text-blue-700">
+                AI Resume Builder
+              </span>
+            </div>
+
+            <h1 className="text-5xl font-extrabold text-gray-800 leading-tight mb-6">
+              Buat CV Profesional dalam Hitungan Menit
+            </h1>
+
+            <p className="text-lg text-gray-600 mb-8 max-w-md">
+              Platform pintar untuk membantu kamu menyusun resume yang memikat
+              HRD — cepat, gratis, dan efektif.
+            </p>
+
             <a
-              href="/my-resume"
-              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
+              href="/register"
+              className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition"
             >
-              Go to My Resume
-            </a>
-            <a
-              href="/my-resume/create"
-              className="bg-gray-100 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-200 transition"
-            >
-              Create New Resume
+              Daftar Gratis Sekarang
             </a>
           </div>
+
+          <div className="flex-1 md:block max-w-fit">
+            <svg
+              width="320"
+              height="400"
+              viewBox="0 0 320 400"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                width="320"
+                height="400"
+                rx="24"
+                fill="#F9FAFB"
+                stroke="#CBD5E1"
+                stroke-width="2"
+              />
+
+              <rect
+                x="24"
+                y="32"
+                width="120"
+                height="20"
+                rx="4"
+                fill="#3B82F6"
+              />
+              <rect
+                x="24"
+                y="60"
+                width="200"
+                height="14"
+                rx="3"
+                fill="#E5E7EB"
+              />
+
+              <rect
+                x="24"
+                y="100"
+                width="272"
+                height="12"
+                rx="3"
+                fill="#E5E7EB"
+              />
+              <rect
+                x="24"
+                y="120"
+                width="272"
+                height="12"
+                rx="3"
+                fill="#E5E7EB"
+              />
+              <rect
+                x="24"
+                y="140"
+                width="200"
+                height="12"
+                rx="3"
+                fill="#E5E7EB"
+              />
+
+              <rect
+                x="24"
+                y="180"
+                width="272"
+                height="12"
+                rx="3"
+                fill="#E5E7EB"
+              />
+              <rect
+                x="24"
+                y="200"
+                width="272"
+                height="12"
+                rx="3"
+                fill="#E5E7EB"
+              />
+              <rect
+                x="24"
+                y="220"
+                width="180"
+                height="12"
+                rx="3"
+                fill="#E5E7EB"
+              />
+
+              <rect
+                x="24"
+                y="360"
+                width="100"
+                height="12"
+                rx="3"
+                fill="#3B82F6"
+              />
+            </svg>
+          </div>
         </div>
+        <div className="absolute top-0 left-0 w-64 h-64 bg-blue-300 rounded-full opacity-30 blur-3xl -z-10" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-300 rounded-full opacity-30 blur-3xl -z-10" />
       </section>
     </>
   );

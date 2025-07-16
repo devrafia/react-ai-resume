@@ -32,7 +32,7 @@ export default function MyResume() {
     <>
       <div id="no-print">
         <Header />
-        <div className="container mx-auto px-4 py-6">
+        <div className="flex justify-center container mx-auto px-16 py-6">
           <div className="flex justify-center gap-4 mb-4">
             <Button onClick={handleDownload}>Download PDF</Button>
             <Button variant="outline" onClick={handleShare}>
@@ -40,10 +40,24 @@ export default function MyResume() {
             </Button>
           </div>
         </div>
+        <div className="text-center mb-6">
+          <p className="text-3xl font-bold text-slate-800">
+            🎉 Congratulations! Your resume is ready to impress.
+          </p>
+          <p className="text-base text-slate-600 mt-2">
+            Share it proudly and take the next step toward your dream career.
+          </p>
+        </div>
       </div>
-      <div id="print-area" className="bg-white rounded-md shadow-md">
+      <div
+        id="print-area"
+        className="flex justify-center bg-white rounded-md px-16 pb-16"
+      >
         {resumeData ? (
-          <PreviewResume resumeData={resumeData} />
+          <PreviewResume
+            resumeData={resumeData}
+            className="w-[45%] bg-white shadow-md print:w-full"
+          />
         ) : (
           <p className="text-center text-gray-500">Loading resume...</p>
         )}
