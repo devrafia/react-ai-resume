@@ -1,5 +1,5 @@
 import { UserButton, useUser } from "@clerk/clerk-react";
-import { Navigate } from "react-router";
+import { Link, Navigate } from "react-router";
 import { Header } from "../components/ui/custom/Header";
 import { FileText } from "lucide-react";
 
@@ -20,20 +20,20 @@ export function Home() {
             </div>
 
             <h1 className="text-5xl font-extrabold text-gray-800 leading-tight mb-6">
-              Buat CV Profesional dalam Hitungan Menit
+              Create a Professional Resume in Minutes
             </h1>
 
             <p className="text-lg text-gray-600 mb-8 max-w-md">
-              Platform pintar untuk membantu kamu menyusun resume yang memikat
-              HRD — cepat, gratis, dan efektif.
+              A smart platform to help you craft an impressive resume — fast,
+              free, and effective.
             </p>
 
-            <a
-              href="/register"
+            <Link
+              to={"auth/sign-in"}
               className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition"
             >
-              Daftar Gratis Sekarang
-            </a>
+              Get Started for Free
+            </Link>
           </div>
 
           <div className="flex-1 md:block max-w-fit">
@@ -50,9 +50,8 @@ export function Home() {
                 rx="24"
                 fill="#F9FAFB"
                 stroke="#CBD5E1"
-                stroke-width="2"
+                strokeWidth="2"
               />
-
               <rect
                 x="24"
                 y="32"
@@ -69,7 +68,6 @@ export function Home() {
                 rx="3"
                 fill="#E5E7EB"
               />
-
               <rect
                 x="24"
                 y="100"
@@ -94,7 +92,6 @@ export function Home() {
                 rx="3"
                 fill="#E5E7EB"
               />
-
               <rect
                 x="24"
                 y="180"
@@ -119,7 +116,6 @@ export function Home() {
                 rx="3"
                 fill="#E5E7EB"
               />
-
               <rect
                 x="24"
                 y="360"
